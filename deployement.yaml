@@ -1,0 +1,29 @@
+vi nginx-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+kubectl apply -f nginx-deployment.yaml
+kubectl get deployment nginx-deployment
+kubectl get pods
+kubectl describe rs nginx-deployment
+
