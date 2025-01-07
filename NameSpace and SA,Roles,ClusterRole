@@ -1,0 +1,185 @@
+##NameSpace
+
+Vi namespace-test.yaml
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
+
+Vi namespace-prod.yaml
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+
+##Create Service Account
+
+Vi serviceaccount-test.yaml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: test-service-account
+  namespace: test
+
+Vi serviceaccount-prod.yaml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prod-service-account
+  namespace: prod
+
+##Role for Test
+
+Vi role-test.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: test
+  name: test-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "create", "delete"]
+
+Vi role-prod.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: prod
+  name: prod-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "create", "delete"]
+
+EKS $ kubectl get role -n test
+NAME        CREATED AT
+test-role   2025-01-07T18:13:49Z
+
+EKS $ kubectl get role -n prod
+NAME        CREATED AT
+prod-role   2025-01-07T18:14:00Z
+
+##Create RoleBinding
+
+Vi rolebinding.test.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: test-rolebinding
+  namespace: test
+subjects:
+- kind: ServiceAccount
+  name: test-service-account
+  namespace: test
+roleRef:
+  kind: Role
+  name: test-role
+  apiGroup: rbac.authorization.k8s.io
+
+Vi rolebinding-prod.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prod-rolebinding
+  namespace: prod
+subjects:
+- kind: ServiceAccount
+  name: prod-service-account
+  namespace: prod
+roleRef:
+  kind: Role
+  name: prod-role
+  apiGroup: rbac.authorization.k8s.io
+
+##Deployment in test NameSpace
+
+Vi deployment-test.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+  namespace: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      serviceAccountName: test-service-account
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+Vi deployment-prod.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prod-deployment
+  namespace: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prod-app
+  template:
+    metadata:
+      labels:
+        app: prod-app
+    spec:
+      serviceAccountName: prod-service-account
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+kubectl auth can-i create pods --as=system:serviceaccount:test:test-service-account -n test
+kubectl auth can-i delete pods --as=system:serviceaccount:prod:prod-service-account -n prod
+
+##Create ClusterRole
+
+Vi clusterrole.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "create", "delete"]
+
+Vi clusterrolebinding.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-rolebinding
+subjects:
+- kind: ServiceAccount
+  name: test-service-account
+  namespace: test
+- kind: ServiceAccount
+  name: prod-service-account
+  namespace: prod
+roleRef:
+  kind: ClusterRole
+  name: cluster-role
+  apiGroup: rbac.authorization.k8s.io
