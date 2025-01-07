@@ -24,3 +24,5 @@ Create cluster
 Eksctl create cluster --name eks-lab-cluster --region ap-south-1 --node-type t2.medium
 
 Eksctl delete cluster eks-lab-cluster --region ap-south-1
+
+
