@@ -1,0 +1,19 @@
+In Industry no one use NodePort Service instead we use AWS Provided LoadBalancer Service
+
+##Create LoadBalancer Service
+
+Vi nginx-loadbalancer.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80            # Exposed Externally
+      targetPort: 80      # Maps to Controler Port
+  type: LoadBalancer
