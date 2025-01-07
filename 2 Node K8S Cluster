@@ -1,0 +1,26 @@
+Install Kubectl:
+# 
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.31.2/2024-11-15/bin/linux/amd64/kubectl
+
+# Apply execute permissions to the binary.
+Chmod +x ./kubectl
+
+# Copy the binary to a folder in your PATH. If you have already installed a version of kubectl, then we recommend creating a $HOME/bin/kubectl and ensuring that $HOME/bin comes first in your $PATH.
+
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH 
+
+To Verify:
+
+Kubectl version --client
+
+Install eksctl:
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+
+sudo mv /tmp/eksctl /usr/local/bin
+
+Create cluster
+
+Eksctl create cluster --name eks-lab-cluster --region ap-south-1 --node-type t2.medium
+
+Eksctl delete cluster eks-lab-cluster --region ap-south-1
