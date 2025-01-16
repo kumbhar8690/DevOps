@@ -1,1 +1,25 @@
+K8s Storage
+Ephemeral Storage: Storage which has lifecycle till the pod is running...once the pod is runnning storage is available.....pod get deleted storage
+also gets Deleted.
 
+Ephemeral Volume:
+EmptyDir
+Config Map/Secrets Volume
+
+Launch Ephemeral POD:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ephemeral-pod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ['sleep', '3600']
+    volumeMounts:
+     - name: /cache
+       mountPath: cache-volume
+  volumes:
+   - name: cache-volume
+     emptyDir: {}
