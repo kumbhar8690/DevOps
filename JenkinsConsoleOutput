@@ -1,0 +1,146 @@
+Started by user Gaurav Kumbhar
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Agent1 in /home/ubuntu/workspace/DjangoCICD
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Pull from SourceCode)
+[Pipeline] echo
+This is Code Stage
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+Fetching changes from the remote Git repository
+Checking out Revision 5b55069b324d0a4e370a82a3e37031ced1f80936 (refs/remotes/origin/main)
+Commit message: "Update README.md"
+ > git rev-parse --resolve-git-dir /home/ubuntu/workspace/DjangoCICD/.git # timeout=10
+ > git config remote.origin.url https://github.com/kumbhar8690/django-notes.git # timeout=10
+Fetching upstream changes from https://github.com/kumbhar8690/django-notes.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/kumbhar8690/django-notes.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 5b55069b324d0a4e370a82a3e37031ced1f80936 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D main # timeout=10
+ > git checkout -b main 5b55069b324d0a4e370a82a3e37031ced1f80936 # timeout=10
+ > git rev-list --no-walk 5b55069b324d0a4e370a82a3e37031ced1f80936 # timeout=10
+[Pipeline] echo
+Git Cloning is successfull
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (BuildImage and Test)
+[Pipeline] echo
+This is Build Stage
+[Pipeline] sh
++ whoami
+ubuntu
+[Pipeline] sh
++ docker build -t notes-app:latest .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  8.415MB
+
+Step 1/7 : FROM python:3.9
+ ---> 2ea5847b07f6
+Step 2/7 : WORKDIR /app/backend
+ ---> Using cache
+ ---> 42ab6708b04d
+Step 3/7 : COPY requirements.txt /app/backend
+ ---> Using cache
+ ---> c126911ba440
+Step 4/7 : RUN pip install -r requirements.txt
+ ---> Using cache
+ ---> 6f9019035e1a
+Step 5/7 : COPY . /app/backend
+ ---> 9cdea9b812c9
+Step 6/7 : EXPOSE 8000
+ ---> Running in 6c4dcc8008bd
+ ---> Removed intermediate container 6c4dcc8008bd
+ ---> 031881a6f116
+Step 7/7 : CMD python /app/backend/manage.py runserver 0.0.0.0:8000
+ ---> Running in 748f543d3003
+ ---> Removed intermediate container 748f543d3003
+ ---> fed9614b2811
+Successfully built fed9614b2811
+Successfully tagged notes-app:latest
+[Pipeline] echo
+Build is Successfull
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push to Repo)
+[Pipeline] echo
+This is pushing image to DockerHub Stage
+[Pipeline] withCredentials
+Masking supported pattern matches of $dockerHubPass
+[Pipeline] {
+[Pipeline] sh
+Warning: A secret was passed to "sh" using Groovy String interpolation, which is insecure.
+		 Affected argument(s) used the following variable(s): [dockerHubPass]
+		 See https://jenkins.io/redirect/groovy-string-interpolation for details.
++ docker login -u glaxm -p ****
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /home/ubuntu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] sh
++ docker image tag notes-app:latest glaxm/notes-app:latest
+[Pipeline] sh
++ docker push glaxm/notes-app:latest
+The push refers to repository [docker.io/glaxm/notes-app]
+2a18a7b51178: Preparing
+f0052ddeb017: Preparing
+74cceba77b78: Preparing
+1906731f7ad1: Preparing
+b04d9cc455c3: Preparing
+75c3a89d72d3: Preparing
+5fbd455dea1a: Preparing
+ebad64620a59: Preparing
+f379f6005525: Preparing
+0e5c23e041ee: Preparing
+397f1b2e2505: Preparing
+75c3a89d72d3: Waiting
+5fbd455dea1a: Waiting
+ebad64620a59: Waiting
+f379f6005525: Waiting
+0e5c23e041ee: Waiting
+397f1b2e2505: Waiting
+b04d9cc455c3: Mounted from library/python
+1906731f7ad1: Pushed
+74cceba77b78: Pushed
+75c3a89d72d3: Mounted from library/python
+5fbd455dea1a: Mounted from library/python
+2a18a7b51178: Pushed
+ebad64620a59: Mounted from library/python
+f379f6005525: Mounted from library/python
+0e5c23e041ee: Mounted from library/python
+397f1b2e2505: Mounted from library/python
+f0052ddeb017: Pushed
+latest: digest: sha256:68b51dc345780555c9e867a5e8a05d61c1277558a4ae5e147d441a503f47a468 size: 2633
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] echo
+This is Deploy Stage
+[Pipeline] sh
++ docker compose up -d
+time="2025-01-28T07:56:27Z" level=warning msg="/home/ubuntu/workspace/DjangoCICD/docker-compose.yml: `version` is obsolete"
+ Container djangocicd-web-1  Running
+[Pipeline] echo
+Deployment is successfull
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
