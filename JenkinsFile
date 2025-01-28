@@ -2,14 +2,14 @@ pipeline {
     agent { label "Agent1"}
 
     stages {
-        stage('Code') {
+        stage('Pull from SourceCode') {
             steps {
                 echo 'This is Code Stage'
                 git branch: 'main', url: 'https://github.com/kumbhar8690/django-notes.git'
                 echo 'Git Cloning is successfull'
             }
         }
-        stage('Build') {
+        stage('BuildImage and Test') {
             steps {
                 echo 'This is Build Stage'
                 sh "whoami"
@@ -17,9 +17,17 @@ pipeline {
                 echo "Build is Successfull"
             }
         }
-        stage('test') {
+        stage('Push to Repo') {
             steps {
-                echo 'This is Test Stage'
+                echo 'This is pushing image to DockerHub Stage'
+                withCredentials([usernamePassword(
+                    'credentialsId':"DockerHubkey",
+                    usernameVariable:"dockerHubUser", 
+                    passwordVariable:"dockerHubPass")]){
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass} "
+                sh "docker image tag notes-app:latest ${env.dockerHubUser}/notes-app:latest"
+                sh "docker push ${env.dockerHubUser}/notes-app:latest"
+                }
             }
         }
         stage('Deploy') {
