@@ -1,0 +1,77 @@
+Jenkins Master connect with agents via SSH using Public and Private Keys
+
+Proces:
+Connect to Master:cd ~/.ssh
+generate public and private keys: rsa-keygen
+copy cotent of public key and copy it on Agent authorized_keys file
+Connect to Agent: cd .ssh
+vi authorized_keys
+paste public key
+
+go to Master Jenkins UI
+Configure Agent using Master Private Key Authentiation
+
+SSHLauncher{host='18.60.91.10', port=22, credentialsId='Ubuntu-Key', jvmOptions='', javaPath='', prefixStartSlaveCmd='', suffixStartSlaveCmd='', launchTimeoutSeconds=60, maxNumRetries=10, retryWaitTime=15, sshHostKeyVerificationStrategy=hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy, tcpNoDelay=true, trackCredentials=true}
+[01/28/25 05:46:25] [SSH] Opening SSH connection to 18.60.91.10:22.
+[01/28/25 05:46:26] [SSH] WARNING: SSH Host Keys are not being verified. Man-in-the-middle attacks may be possible against this connection.
+[01/28/25 05:46:26] [SSH] Authentication successful.
+[01/28/25 05:46:26] [SSH] The remote user's environment is:
+BASH=/usr/bin/bash
+BASHOPTS=checkwinsize:cmdhist:complete_fullquote:extquote:force_fignore:globasciiranges:globskipdots:hostcomplete:interactive_comments:patsub_replacement:progcomp:promptvars:sourcepath
+BASH_ALIASES=()
+BASH_ARGC=([0]="0")
+BASH_ARGV=()
+BASH_CMDS=()
+BASH_EXECUTION_STRING=set
+BASH_LINENO=()
+BASH_LOADABLES_PATH=/usr/local/lib/bash:/usr/lib/bash:/opt/local/lib/bash:/usr/pkg/lib/bash:/opt/pkg/lib/bash:.
+BASH_SOURCE=()
+BASH_VERSINFO=([0]="5" [1]="2" [2]="21" [3]="1" [4]="release" [5]="x86_64-pc-linux-gnu")
+BASH_VERSION='5.2.21(1)-release'
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+DIRSTACK=()
+EUID=1000
+GROUPS=()
+HOME=/home/ubuntu
+HOSTNAME=ip-172-31-46-189
+HOSTTYPE=x86_64
+IFS=$' \t\n'
+LANG=C.UTF-8
+LOGNAME=ubuntu
+MACHTYPE=x86_64-pc-linux-gnu
+OPTERR=1
+OPTIND=1
+OSTYPE=linux-gnu
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PIPESTATUS=([0]="0")
+PPID=3468
+PS4='+ '
+PWD=/home/ubuntu
+SHELL=/bin/bash
+SHELLOPTS=braceexpand:hashall:interactive-comments
+SHLVL=1
+SSH_CLIENT='18.61.101.123 60758 22'
+SSH_CONNECTION='18.61.101.123 60758 172.31.46.189 22'
+TERM=dumb
+UID=1000
+USER=ubuntu
+XDG_RUNTIME_DIR=/run/user/1000
+XDG_SESSION_CLASS=user
+XDG_SESSION_ID=4
+XDG_SESSION_TYPE=tty
+_=']'
+[01/28/25 05:46:26] [SSH] Starting sftp client.
+[01/28/25 05:46:27] [SSH] Copying latest remoting.jar...
+[01/28/25 05:46:27] [SSH] Copied 1,393,083 bytes.
+Expanded the channel window size to 4MB
+[01/28/25 05:46:27] [SSH] Starting agent process: cd "/home/ubuntu" && java  -jar remoting.jar -workDir /home/ubuntu -jar-cache /home/ubuntu/remoting/jarCache
+Jan 28, 2025 5:46:27 AM org.jenkinsci.remoting.engine.WorkDirManager initializeWorkDir
+INFO: Using /home/ubuntu/remoting as a remoting work directory
+Jan 28, 2025 5:46:27 AM org.jenkinsci.remoting.engine.WorkDirManager setupLogging
+INFO: Both error and output logs will be printed to /home/ubuntu/remoting
+<===[JENKINS REMOTING CAPACITY]===>channel started
+Remoting version: 3261.v9c670a_4748a_9
+Launcher: SSHLauncher
+Communication Protocol: Standard in/out
+This is a Unix agent
+Agent successfully connected and online
