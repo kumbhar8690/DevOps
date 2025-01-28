@@ -1,0 +1,16 @@
+
+
+Started by user Gaurav Kumbhar
+Running as SYSTEM
+Building in workspace /var/lib/jenkins/workspace/FirstDemoProject
+[FirstDemoProject] $ /bin/sh -xe /tmp/jenkins2899542569125340822.sh
++ echo Hi Gaurav This Side
+Hi Gaurav This Side
++ echo This is my Devops Project
+This is my Devops Project
++ mkdir -p devops
++ cd devops
++ echo This is Gaurav
++ echo file created Successfully
+file created Successfully
+Finished: SUCCESS
