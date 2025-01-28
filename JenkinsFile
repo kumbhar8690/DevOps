@@ -1,0 +1,33 @@
+pipeline {
+    agent { label "Agent1"}
+
+    stages {
+        stage('Code') {
+            steps {
+                echo 'This is Code Stage'
+                git branch: 'main', url: 'https://github.com/kumbhar8690/django-notes.git'
+                echo 'Git Cloning is successfull'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'This is Build Stage'
+                sh "whoami"
+                sh "docker build -t notes-app:latest ."
+                echo "Build is Successfull"
+            }
+        }
+        stage('test') {
+            steps {
+                echo 'This is Test Stage'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'This is Deploy Stage'
+                    sh "docker compose up -d"
+                echo "Deployment is successfull"
+            }
+        }
+    }
+}
