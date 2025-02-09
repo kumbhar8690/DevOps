@@ -27,4 +27,4 @@ Eksctl delete cluster eks-lab-cluster --region ap-south-1
 
 Command to create 3 node K8S Cluster
 
-eksctl create cluster --name eks-lab-cluster --region ap-south-1 --nodegroup-name eks-lab-cluster-nodegroup --node-type t2.medium --nodes 3
+eksctl create cluster --name eks-lab-cluster1 --region ap-south-1 --nodegroup-name eks-lab-cluster1-nodegroup --node-type t2.medium --nodes 3
